@@ -195,7 +195,7 @@ const ChapterContent = ({ courseInfo, refreshData }) => {
           {topics?.map((topic, index) => (
             <div
               key={index}
-              className="p-4 md:p-6 bg-gray-50 rounded-lg shadow-sm border border-gray-200 overflow-hidden"
+              className="p-4 md:p-7 bg-gray-50 rounded-lg shadow-sm border border-gray-200 overflow-hidden"
             >
               <h4 className="text-xl md:text-2xl font-semibold text-blue-600 mb-2 break-words">
                 {index + 1}. {topic?.topic}
