@@ -60,7 +60,10 @@ export function AppSidebar() {
     return (
         <Sidebar className="min-h-screen w-64 bg-white border-r shadow-sm">
             <SidebarHeader className="p-4 border-b flex justify-center">
+                <Link href={"/"}>
                 <Image src="/logo.png" alt="Eduvora Logo" width={120} height={120} />
+                </Link>
+
             </SidebarHeader>
 
             <SidebarContent className="p-4">

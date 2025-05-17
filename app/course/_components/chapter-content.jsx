@@ -189,7 +189,7 @@ const ChapterContent = ({ courseInfo, refreshData }) => {
       {/* Topics Section */}
       <div className="mt-8">
         <h3 className="text-2xl md:text-3xl font-semibold text-gray-700 mb-4">
-          Topics Covered 📚
+          Topics Covered 📔
         </h3>
         <div className="space-y-6">
           {topics?.map((topic, index) => (

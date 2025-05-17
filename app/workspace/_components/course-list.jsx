@@ -7,25 +7,41 @@ import AddNewCourseDialog from './add-new-course-dialog';
 import axios from 'axios';
 import { useUser } from '@clerk/nextjs';
 import CourseCard from './course-card';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const CourseList = () => {
     const [courseList, setCourseList] = useState([]);
+    const [loading, setLoading] = useState(true);
     const { user } = useUser();
 
     useEffect(() => {
-        user && getCourseInfo();
+        if (user) getCourseInfo();
     }, [user]);
+
     const getCourseInfo = async () => {
-        const result = await axios.get("/api/courses");
-        console.log(result.data);
-        setCourseList(result.data);
+        try {
+            setLoading(true);
+            const result = await axios.get("/api/courses");
+            console.log(result.data);
+            setCourseList(result.data || []);
+        } catch (error) {
+            console.error("Error fetching courses:", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
         <div className="mt-10 px-6">
             <h2 className="text-3xl font-extrabold text-gray-800 mb-6">Your Courses</h2>
 
-            {courseList?.length === 0 ? (
+            {loading ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 sm:px-6 py-8 max-w-7xl mx-auto mb-12">
+                    {[0, 1, 2, 3, 4].map((item) => (
+                        <Skeleton key={item} className="w-full h-[240px] rounded-xl" />
+                    ))}
+                </div>
+            ) : courseList.length === 0 ? (
                 <div className="flex flex-col items-center justify-center gap-4 p-10 bg-secondary border border-gray-200 rounded-xl shadow-sm text-center">
                     <Image src="/online-education.png" alt="No Courses" width={100} height={100} className="opacity-90" />
                     <h3 className="text-2xl font-semibold text-gray-700">
@@ -41,11 +57,11 @@ const CourseList = () => {
                     </AddNewCourseDialog>
                 </div>
             ) : (
-                    <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 sm:px-6 py-8 max-w-7xl mx-auto mb-12'>
-                        {courseList?.map((course, index) => (
-                            <CourseCard course={course} key={index} />
-                        ))}
-                    </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 sm:px-6 py-8 max-w-7xl mx-auto mb-12">
+                    {courseList.map((course, index) => (
+                        <CourseCard course={course} key={index} />
+                    ))}
+                </div>
             )}
         </div>
     );

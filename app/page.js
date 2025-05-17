@@ -1,12 +1,24 @@
-import { SignInButton, SignOutButton, UserButton } from "@clerk/nextjs";
+"use client"
 
-export default function Home() {
+import CTASection from "@/components/landing/CTASection";
+import FeaturesSection from "@/components/landing/FeaturesSection";
+import Footer from "@/components/landing/Footer";
+import HeroSection from "@/components/landing/HeroSection";
+import Navbar from "@/components/landing/Navbar";
+
+
+const Index = () => {
   return (
-    <div>
-      ehllo 
-      <SignInButton/>
-      <SignOutButton/>
-      <UserButton/>
+    <div className="flex flex-col min-h-screen">
+      <Navbar />
+      <main className="flex-grow">
+        <HeroSection />
+        <FeaturesSection />
+        <CTASection />
+      </main>
+      <Footer />
     </div>
   );
-}
+};
+
+export default Index;

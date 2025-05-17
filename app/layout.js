@@ -10,7 +10,7 @@ const outfit = Outfit({
 });
 
 export const metadata = {
-  title: "Edvora",
+  title: "Eduvora - AI Learning Platform",
   description: "AI Based online learning platform",
   icons: {
     icon: "/online-education.png"
