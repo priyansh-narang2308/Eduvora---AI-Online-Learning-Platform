@@ -28,12 +28,39 @@ export async function POST(req) {
 export async function GET(req) {
 
     const user = await currentUser();
+    const { searchParams } = new URL(req.url);
+    const courseId = searchParams?.get("courseId");
 
-    const result = await db.select().from(coursesTable)
-        // need to connect two tables thats why innerjoin
-        .innerJoin(enrollCourseTable, eq(coursesTable.cid, enrollCourseTable.cid))
-        .where(eq(enrollCourseTable.userEmail, user?.primaryEmailAddress?.emailAddress))
-        .orderBy(desc(enrollCourseTable.id));
+    if (courseId) {
+        // to fethc that particular record
+        const result = await db.select().from(coursesTable)
+            // need to connect two tables thats why innerjoin
+            .innerJoin(enrollCourseTable, eq(coursesTable.cid, enrollCourseTable.cid))
+            .where(and(eq(enrollCourseTable.userEmail, user?.primaryEmailAddress?.emailAddress), eq(enrollCourseTable.cid, courseId)));
+        return NextResponse.json(result[0]);
+
+    } else {
+
+        const result = await db.select().from(coursesTable)
+            // need to connect two tables thats why innerjoin
+            .innerJoin(enrollCourseTable, eq(coursesTable.cid, enrollCourseTable.cid))
+            .where(eq(enrollCourseTable.userEmail, user?.primaryEmailAddress?.emailAddress))
+            .orderBy(desc(enrollCourseTable.id));
+
+        return NextResponse.json(result);
+
+    }
+}
+
+export async function PUT(req) {
+    const { completedChapter, courseId } = await req.json();
+    const user = await currentUser();
+
+    const result = await db.update(enrollCourseTable).set({
+        completedChapters: completedChapter
+    }).where(and(eq(enrollCourseTable.cid, courseId),
+        eq(enrollCourseTable.userEmail, user?.primaryEmailAddress?.emailAddress)))
+        .returning(enrollCourseTable);
 
     return NextResponse.json(result);
 }

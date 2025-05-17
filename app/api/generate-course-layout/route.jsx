@@ -1,11 +1,12 @@
 
 import { db } from '@/config/db';
 import { coursesTable } from '@/config/schema';
-import { currentUser } from '@clerk/nextjs/server';
+import { auth, currentUser } from '@clerk/nextjs/server';
 import {
   GoogleGenAI,
 } from '@google/genai';
 import axios from 'axios';
+import { eq } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
 
 const PROMPT = `
@@ -57,6 +58,9 @@ export async function POST(req) {
   const { courseId, ...formData } = await req.json();
   const user = await currentUser();
 
+  const { has } = await auth();
+  const hasPremiumAccess = has({ plan: 'starter' });
+
   const ai = new GoogleGenAI({
     apiKey: process.env.GEMINI_API_KEY,
   });
@@ -75,6 +79,16 @@ export async function POST(req) {
     },
   ];
 
+  // to check whether the user has already created the course or not 
+  if (!hasPremiumAccess) {
+    const result = await db.select().from(coursesTable)
+      .where(eq(coursesTable.userEmail, user?.primaryEmailAddress?.emailAddress));
+
+    if (result?.length >= 1) {
+      return NextResponse.json({ "resp": "limit exceeded" });
+    }
+  }
+
   const response = await ai.models.generateContent({
     model,
     config,
@@ -89,7 +103,7 @@ export async function POST(req) {
   const imagePrompt = jsonResp.course?.bannerImagePrompt;
 
   // generate the banner images and save it to the database
-  const bannerImageUrl =await GenerateImage(imagePrompt);
+  const bannerImageUrl = await GenerateImage(imagePrompt);
 
 
   // save the info to the database

@@ -2,13 +2,14 @@
 
 import { Button } from '@/components/ui/button';
 import axios from 'axios';
-import { Book, Clock, Settings, TrendingUp, Loader } from 'lucide-react';
+import { Book, Clock, Settings, TrendingUp, Loader, PlayCircle } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 
-const CourseInfo = ({ course }) => {
+const CourseInfo = ({ course, viewCourse }) => {
     const courseLayout = course?.courseJson?.course;
     const [loading, setLoading] = useState(false);
     const router = useRouter();
@@ -24,12 +25,12 @@ const CourseInfo = ({ course }) => {
             });
             console.log(result.data);
             setLoading(false);
-            router.replace("/workspace")
-            toast.success("Course Content Generated!")
+            router.replace("/workspace");
+            toast.success("Course Content Generated!");
         } catch (error) {
             console.log("Error: ", error);
             setLoading(false);
-            toast.error("Error! Please try again")
+            toast.error("Error! Please try again");
         }
     };
 
@@ -85,8 +86,7 @@ const CourseInfo = ({ course }) => {
                         </p>
                     </div>
                 </div>
-
-                <Button
+                {!viewCourse ? <Button
                     className="cursor-pointer w-full bg-blue-600 hover:bg-blue-800"
                     onClick={generateCourseContent}
                     disabled={loading}
@@ -102,7 +102,14 @@ const CourseInfo = ({ course }) => {
                             Generate Content
                         </>
                     )}
-                </Button>
+                </Button> : 
+                <div>
+                    <Link href={"/course/"+course?.cid}>
+                    <Button className="cursor-pointer w-full bg-green-600 hover:bg-green-800">  
+                    <PlayCircle /> Continue Learning</Button>
+                    </Link>
+                </div>}
+
             </div>
         </div>
     );

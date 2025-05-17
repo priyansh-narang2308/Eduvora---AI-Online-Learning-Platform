@@ -9,9 +9,12 @@ const EnrollCourseCard = ({ course, enrollCourse }) => {
 
     const courseJson = course?.courseJson?.course;
 
-    const calculatePerProgress=()=>{
-      return (enrollCourse?.completedChapters?.length??0/course?.courseContent?.length)*100
-    }
+  const calculatePerProgress = () => {
+    const completed = enrollCourse?.completedChapters?.length ?? 0;
+    const total = course?.courseContent?.length ?? 1; 
+    return ((completed / total) * 100).toFixed(0); 
+  };
+
 
     return (
         <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 w-full h-full flex flex-col border border-gray-200 overflow-hidden">
@@ -61,13 +64,13 @@ const EnrollCourseCard = ({ course, enrollCourse }) => {
             <div className="w-full space-y-1">
               <div className="flex justify-between items-center">
                 <span className="text-lg font-medium text-blue-800">Progress</span>
-                <span className="text-lg font-semibold text-blue-800">  {calculatePerProgress()}% </span>
+                <span className="text-lg font-semibold text-blue-800">{calculatePerProgress()}%</span>
               </div>
               <Progress value={calculatePerProgress()} />
             </div>
 
             <Link
-              href={`/workspace/course/${course?.cid}`}
+              href={`/workspace/view-course/${course?.cid}`}
               className="mt-auto  w-full bg-green-600 hover:bg-green-800 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-3 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
             >
            <PlayCircle/>  Continue Learning

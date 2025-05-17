@@ -6,10 +6,10 @@ import React, { useEffect, useState } from 'react';
 import CourseInfo from '../_components/course-info';
 import ChapterTopicList from '../_components/chapter-topic-list';
 
-const EditCourse = () => {
+const EditCourse = ({ viewCourse = false }) => {
 
     const [loading, setLoading] = useState(false);
-    const [course, setCourse] = useState("")
+    const [course, setCourse] = useState("");
 
     const { courseId } = useParams();
 
@@ -22,13 +22,13 @@ const EditCourse = () => {
         const result = await axios.get(`/api/courses?courseId=${courseId}`);
         console.log(result.data);
         setLoading(false);
-        setCourse(result.data)
+        setCourse(result.data);
     };
 
     return (
         <div>
-            <CourseInfo course={course} />
-            <ChapterTopicList  course={course}/>
+            <CourseInfo course={course} viewCourse={viewCourse} />
+            <ChapterTopicList course={course} />
         </div>
     );
 };

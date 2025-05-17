@@ -1,5 +1,6 @@
 "use client";
 
+import { SelectedChapterIndexContext } from "@/context/SelectedChapterIndexContext";
 import { UserDetailContext } from "@/context/UserDetailContext";
 import { useUser } from "@clerk/nextjs";
 import axios from "axios";
@@ -7,7 +8,8 @@ import { useEffect, useState } from "react";
 
 const Provider = ({ children }) => {
 
-    const [userDetail, setUserDetail] = useState("")
+    const [userDetail, setUserDetail] = useState("");
+    const [selectedChapterIndex, setSelectedChapterIndex] = useState("")
 
     const { user } = useUser();
 
@@ -21,13 +23,17 @@ const Provider = ({ children }) => {
             email: user?.primaryEmailAddress?.emailAddress
         });
         console.log(result.data);
-        setUserDetail(result.data)
+        setUserDetail(result.data);
     };
 
     return (
         <div>
             <UserDetailContext.Provider value={{ userDetail, setUserDetail }}>
-                {children}  
+                <SelectedChapterIndexContext.Provider value={{ selectedChapterIndex, setSelectedChapterIndex }} >
+                    <div>
+                        {children}
+                    </div>
+                </SelectedChapterIndexContext.Provider>
             </UserDetailContext.Provider>
         </div>
     );

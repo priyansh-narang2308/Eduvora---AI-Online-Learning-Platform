@@ -24,6 +24,7 @@ import { Loader, Sparkle } from "lucide-react";
 import axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
 import {useRouter} from "next/navigation"
+import { toast } from "sonner";
 
 const AddNewCourseDialog = ({ children }) => {
 
@@ -57,10 +58,16 @@ const AddNewCourseDialog = ({ children }) => {
                 courseId: courseId
             });
             console.log(result.data);
+            if (result.data.resp ==="limit exceeded"){
+                toast.warning("Please Subscribe to plan!")
+                router.push("/workspace/billing")
+            }
+            toast.success("Course Created Successfully!")
             setLoading(false);
             router.push(`/workspace/edit-course/${result.data?.courseId}`)
         } catch (error) {
             console.log("Error: ", error);
+            toast.error("Error in creating course")
             setLoading(false);
         }
     };

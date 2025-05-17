@@ -1,7 +1,6 @@
 import { Outfit } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
 import Provider from "./provider";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -13,16 +12,14 @@ const outfit = Outfit({
 export const metadata = {
   title: "Edvora",
   description: "AI Based online learning platform",
-  icons:{
-    icon:"/online-education.png"
+  icons: {
+    icon: "/online-education.png"
   }
 };
 
 export default function RootLayout({ children }) {
   return (
-    <ClerkProvider appearance={{
-      baseTheme: dark,
-    }}>
+    <ClerkProvider>
       <html lang="en">
         <body
           className={`${outfit.className}`}
@@ -30,8 +27,7 @@ export default function RootLayout({ children }) {
           <Provider>
             {children}
           </Provider>
-                      <Toaster/>
-
+          <Toaster position="top-center" richColors />
         </body>
       </html>
     </ClerkProvider>
